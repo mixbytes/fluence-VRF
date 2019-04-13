@@ -1,0 +1,22 @@
+TARGET = bls
+CC = eosio-cpp
+#TARGET_TRIPLE = --target=wasm32-unknown-unknown -emit-llvm #-nostdinc++
+#CFLAGS = -nostartfiles -fvisibility=hidden -Wl,--no-entry,--demangle,--allow-undefined -nostdlib -v
+BLSFLAGS = -DMCLBN_FP_UNIT_SIZE=4 -DMCL_SIZEOF_UNIT=8 -DCYBOZU_MINIMUM_EXCEPTION -DNDEBUG -DMCL_MAX_BIT_SIZE=384 -DCYBOZU_DONT_USE_EXCEPTION -DCYBOZU_DONT_USE_STRING -DMCL_DONT_USE_CSPRNG #-MD -MP -MF
+#EXPORT_FUNCS = -Wl,--export=allocate,--export=deallocate,--export=invoke
+INCLUDE = -I./lib/bls/include -I./lib/bls/src -I./lib/mcl/include -I./lib/sdk -I./ -Wl,--no-entry,--demangle,--allow-undefined -emit-llvm
+SDK = ./lib/sdk/allocator.cpp ./lib/sdk/logger.cpp
+BLS = ./lib/bls/src/bls_c256.cpp ./lib/mcl/src/fp.cpp
+
+.PHONY: default all clean
+
+default: $(TARGET)
+all: default
+
+$(TARGET): main.cpp $(SDK)
+	$(CC) $(SYSROOT) $(INCLUDE) $(TARGET_TRIPLE) $(BLSFLAGS) $(CFLAGS) $(EXPORT_FUNCS) $^ -o main.wasm
+
+.PRECIOUS: $(TARGET)
+
+clean:
+	-rm -f $(TARGET).wasm
