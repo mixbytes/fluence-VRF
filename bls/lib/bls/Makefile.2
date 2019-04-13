@@ -1,0 +1,23 @@
+TARGET = bls
+CC = clang++
+SYSROOT = --sysroot=/opt/wasi-sdk/
+TARGET_TRIPLE = --target=wasm32-unknown-wasi -nostdinc++
+CFLAGS = -nostartfiles -fvisibility=hidden -Wl,--no-entry,--demangle,--allow-undefined -nostdlib
+BLSFLAGS = -DMCL_SIZEOF_UNIT=8 -DCYBOZU_MINIMUM_EXCEPTION -O3 -DNDEBUG -DMCL_MAX_BIT_SIZE=384 -DCYBOZU_DONT_USE_EXCEPTION -DCYBOZU_DONT_USE_STRING -DMCL_DONT_USE_CSPRNG -fno-exceptions #-MD -MP -MF
+EXPORT_FUNCS = -Wl,--export=allocate,--export=deallocate,--export=invoke
+INCLUDE = -I./include -I./src -I../mcl/include -I./ -I/opt/wasi-sdk/share/sysroot/include/c++/v1/ -I/opt/wasi-sdk/share/sysroot/include/
+SDK = ../sdk/allocator.cpp ../sdk/logger.cpp
+LIBS = -L /opt/wasi-sdk/lib/clang/8.0.0/lib/wasi/
+
+.PHONY: default all clean
+
+default: $(TARGET)
+all: default
+
+$(TARGET): src/bls_c256.cpp ../mcl/src/fp.cpp $(SDK)
+	$(CC) $(LIBS) $(SYSROOT) $(INCLUDE) $(TARGET_TRIPLE) $(BLSFLAGS) $(CFLAGS) $(EXPORT_FUNCS) $^ -o $@.wasm
+
+.PRECIOUS: $(TARGET)
+
+clean:
+	-rm -f $(TARGET).wasm

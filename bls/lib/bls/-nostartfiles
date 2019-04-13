@@ -1,0 +1,3 @@
+bls.wasm: ../sdk/logger.cpp ../sdk/logger.h
+
+../sdk/logger.h:
