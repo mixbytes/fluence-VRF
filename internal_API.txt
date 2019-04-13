@@ -1,0 +1,17 @@
+# start a new game
+bool new_game(int N);
+
+# add stake to the current game
+bool add_stake(int stake_number, PK, committed random part);
+
+# information about participants of the current game
+PK[] participants() const;
+
+# reveal a part of a random
+bool reveal(PK, reveal data);
+
+# result of the current game of some participant
+bool is_winner(PK);
+
+# state of the game (0 - not started, 1 - gathering stakes, 2 - revealing)
+int game_status();
