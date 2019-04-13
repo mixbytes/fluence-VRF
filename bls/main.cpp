@@ -96,6 +96,17 @@ struct Game {
         return players;
     }
 
+    bool is_winner(pub_key_type pub_key) {
+        if (state != STATE_REVEALING || winner.len != pub_key.len)
+            return false;
+
+        return compare(winner.data, pub_key.data, winner.len);
+    }
+
+    int game_status() {
+        return state;
+    }
+
 private:
     bool compare(char *a, char *b, int len) {
         for (int i = 0; i < len; i++) {
@@ -115,6 +126,8 @@ private:
     char **players;
     int len;
     int game_id;
+
+    pub_key_type winner;
 };
 
 
