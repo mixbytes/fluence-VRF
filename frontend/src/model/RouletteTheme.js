@@ -4,6 +4,7 @@ import {red} from "@material-ui/core/colors";
 export default createMuiTheme({
     palette: {
         primary: red,
+
     },
     typography: {
         useNextVariants: true,

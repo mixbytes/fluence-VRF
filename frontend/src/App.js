@@ -31,8 +31,19 @@ class App extends Component {
         // create a session between client and backend application
         fluence.connect(contractAddress, appId, ethUrl).then((session) => {
             console.log("Session created");
-            this.setState({
-                fluence: {instance: fluence, session: session}
+            let bls = window.bls;
+            bls.init().then(() => {
+                const sec = new bls.SecretKey();
+                sec.setByCSPRNG();
+                const pub = sec.getPublicKey();
+                this.setState({
+                    fluence: {
+                        instance: fluence,
+                        session: session,
+                        privateKey: sec.serializeToHexStr(),
+                        publicKey: pub.serializeToHexStr(),
+                    }
+                });
             });
         });
     }

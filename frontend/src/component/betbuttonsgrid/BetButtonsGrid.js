@@ -1,19 +1,20 @@
 import React, {Component} from 'react';
 import './BetButtonsGrid.css';
 import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/es/Fab/Fab";
 
 class BetButtonsGrid extends Component {
 
     getButton = (n) => {
         return (
-            <Button variant={"fab"} color={"primary"} key={n} mini style={{
+            <Fab disabled={this.props.selected} color={"primary"} key={n} size={"small"} style={{
                 margin: 5
             }} onClick={() => {
                 if (this.props.onClick)
                     this.props.onClick(n);
             }}>
                 {n}
-            </Button>
+            </Fab>
         );
     };
 
