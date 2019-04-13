@@ -7,6 +7,9 @@ bool add_stake(int stake_number, PK, committed random part);
 # information about participants of the current game
 PK[] participants() const;
 
+# stake of a participant (TODO: add special code for failure)
+int get_stake(PK);
+
 # reveal a part of a random
 bool reveal(PK, reveal data);
 
