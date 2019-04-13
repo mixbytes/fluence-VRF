@@ -1,0 +1,16 @@
+.Bet {
+    text-align: center;
+    display: flex;
+}
+
+.BetTable {
+    display: grid;
+    grid-template-columns: 60px 60px 60px;
+    align-items: center;
+    justify-items: center;
+    margin: 50px;
+}
+
+.BetButton {
+    margin: 5px;
+}

@@ -1,0 +1,17 @@
+.WheelWrapper {
+    text-align: center;
+}
+
+.Wheel {
+    width: 300px;
+    height: 300px;
+}
+
+.Wheel.Spinning {
+    animation: Wheel-spin infinite 10s linear;
+}
+
+@keyframes Wheel-spin {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
