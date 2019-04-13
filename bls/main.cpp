@@ -9,6 +9,7 @@ void* memset(void *ptr, int a, size_t b) {
     for (size_t t = 0; t < b; ++t) {
         *(dest + t) = a;
     }
+    return dest;
 }
 
 void init() {
@@ -49,16 +50,24 @@ struct Game {
         players = (char**)malloc(sizeof(char*) * n);
         stakes = (int*)malloc(sizeof(int) * n);
         game_id = game_id_autoinc++;
+
+        state = STATE_GATHERING_STAKES;
         return true;
     }
 
     bool add_stake(int stake, pub_key_type pub_key) {
+        if (state != STATE_GATHERING_STAKES)
+            return false;
+
         stakes[len] = stake;
         players[len] = pub_key.data;
         ++len;
     }
 
     int get_stake(pub_key_type pub_key) {
+        if (state == STATE_NOT_STARTED)
+            return 0;
+
         for (int i = 0; i < len; i++) {
             if (compare(players[i], pub_key.data, pub_key.len))
                 return stakes[i];
@@ -80,9 +89,17 @@ struct Game {
     }
 
     char** get_participants() {
+        if (state == STATE_NOT_STARTED)
+            return 0;
+
         return players;
     }
 private:
+    static const int STATE_NOT_STARTED = 0;
+    static const int STATE_GATHERING_STAKES = 1;
+    static const int STATE_REVEALING = 2;
+    int state;
+
     int *stakes;
     char **players;
     int len;
