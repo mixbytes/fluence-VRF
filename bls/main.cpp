@@ -1,7 +1,10 @@
-#include <sdk.h>
 #include <stdlib.h>
-#include <bls/bls.hpp>
 #include <string>
+
+#ifndef NOBLS
+#include <sdk.h>
+#include <bls/bls.hpp>
+#endif
 
 #define UNUSED(x) (void)(x)
 void* memset(void *ptr, int a, size_t b) {
@@ -18,11 +21,14 @@ void init() {
     if (inited)
         return;
 
+#ifndef NOBLS
     bls::init();
+#endif
 }
 
 extern "C" {
 char *invoke(const char *str, int length) {
+#ifndef NOBLS
     init();
 
 //    bls::Signature s;
@@ -34,6 +40,9 @@ char *invoke(const char *str, int length) {
     pk.getStr(string);
 
     return (char*)string.data();
+#else
+    return 0;
+#endif
 }
 
 static int game_id_autoinc = 0;
@@ -62,6 +71,7 @@ struct Game {
         stakes[len] = stake;
         players[len] = pub_key.data;
         ++len;
+        return true;
     }
 
     int get_stake(pub_key_type pub_key) {
@@ -75,15 +85,6 @@ struct Game {
         return 0;
     }
 
-    bool compare(char *a, char *b, int len) {
-        for (int i = 0; i < len; i++) {
-            if (a[i] != b[i])
-                return false;
-        }
-        return true;
-    }
-
-
     int get_game_id() {
         return game_id;
     }
@@ -94,6 +95,16 @@ struct Game {
 
         return players;
     }
+
+private:
+    bool compare(char *a, char *b, int len) {
+        for (int i = 0; i < len; i++) {
+            if (a[i] != b[i])
+                return false;
+        }
+        return true;
+    }
+
 private:
     static const int STATE_NOT_STARTED = 0;
     static const int STATE_GATHERING_STAKES = 1;
