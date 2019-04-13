@@ -2,7 +2,7 @@
 bool new_game(int N);
 
 # add stake to the current game
-bool add_stake(int stake_number, PK, committed random part);
+bool add_stake(int stake_number, PK);
 
 # information about participants of the current game
 PK[] participants() const;
@@ -10,8 +10,11 @@ PK[] participants() const;
 # stake of a participant (TODO: add special code for failure)
 int get_stake(PK);
 
+# get sequential game id
+int game_id();
+
 # reveal a part of a random
-bool reveal(PK, reveal data);
+bool reveal(PK, signed(game_id()));
 
 # result of the current game of some participant
 bool is_winner(PK);
